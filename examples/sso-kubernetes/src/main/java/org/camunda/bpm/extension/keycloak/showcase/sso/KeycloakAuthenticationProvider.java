@@ -35,8 +35,8 @@ public class KeycloakAuthenticationProvider extends ContainerBasedAuthentication
         // Extract user ID from Keycloak authentication result - which is part of the requested user info
         @SuppressWarnings("unchecked")
         // String userId = ((HashMap<String, String>) userAuthentication.getDetails()).get("sub");
-        String userId = ((HashMap<String, String>) userAuthentication.getDetails()).get("email"); // useEmailAsCamundaUserId = true
-        // String userId = ((HashMap<String, String>) userAuthentication.getDetails()).get("preferred_username"); // useUsernameAsCamundaUserId = true
+        //String userId = ((HashMap<String, String>) userAuthentication.getDetails()).get("email"); // useEmailAsCamundaUserId = true
+        String userId = ((HashMap<String, String>) userAuthentication.getDetails()).get("preferred_username"); // useUsernameAsCamundaUserId = true
         if (StringUtils.isEmpty(userId)) {
             return AuthenticationResult.unsuccessful();
         }

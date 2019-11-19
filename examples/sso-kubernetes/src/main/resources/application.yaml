@@ -7,6 +7,13 @@ spring.datasource:
 spring:
   jersey:
     application-path: /engine-rest
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.url.client}/auth/realms/${KEYCLOAK_REALM} 
+
+
 
 # Redis Session Cache not yet in use
 #  session:
@@ -27,30 +34,31 @@ server:
   port: 8080
   servlet.context-path: /camunda
 
-keycloak.url.client: ${KEYCLOAK_URL_CLIENT:http://localhost:9000}
-keycloak.url.token: ${KEYCLOAK_URL_TOKEN:http://localhost:9000}
-keycloak.url.plugin: ${KEYCLOAK_URL_PLUGIN:https://localhost:9001}
+keycloak.url.client: ${KEYCLOAK_BASE_URL:https://auth.dev.witcom.services}
+keycloak.url.token: ${KEYCLOAK_BASE_URL:https://auth.dev.witcom.services}
+keycloak.url.plugin: ${KEYCLOAK_BASE_URL:https://auth.dev.witcom.services}
 
 security:
   oauth2:
     client:
-      client-id: camunda-identity-service
-      client-secret: 0ca35c49-c721-44dd-a6c2-a5e825e13c84
-      accessTokenUri: ${keycloak.url.token}/auth/realms/camunda/protocol/openid-connect/token
-      userAuthorizationUri: ${keycloak.url.client}/auth/realms/camunda/protocol/openid-connect/auth
+      client-id: ${KEYCLOAK_CLIENT_ID:camunda-identity-service}
+      client-secret: ${KEYCLOAK_CLIENT_SECRET}
+      accessTokenUri: ${keycloak.url.token}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token
+      userAuthorizationUri: ${keycloak.url.client}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/auth
       scope: openid profile email
     resource:
-      userInfoUri: ${keycloak.url.client}/auth/realms/camunda/protocol/openid-connect/userinfo
+      userInfoUri: ${keycloak.url.client}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/userinfo
+
 
 logging.level.org.springframework.security: DEBUG
 
 plugin.identity.keycloak:
-  keycloakIssuerUrl: ${keycloak.url.plugin}/auth/realms/camunda
-  keycloakAdminUrl: ${keycloak.url.plugin}/auth/admin/realms/camunda
-  clientId: camunda-identity-service
-  clientSecret: 0ca35c49-c721-44dd-a6c2-a5e825e13c84
-  useEmailAsCamundaUserId: true
-  useUsernameAsCamundaUserId: false
+  keycloakIssuerUrl: ${keycloak.url.plugin}/auth/realms/${KEYCLOAK_REALM}
+  keycloakAdminUrl: ${keycloak.url.plugin}/auth/admin/realms/${KEYCLOAK_REALM}
+  clientId: ${KEYCLOAK_CLIENT_ID:camunda-identity-service}
+  clientSecret: ${KEYCLOAK_CLIENT_SECRET}
+  useEmailAsCamundaUserId: false
+  useUsernameAsCamundaUserId: true
   useGroupPathAsCamundaGroupId: true
   administratorGroupName: camunda-admin
   disableSSLCertificateValidation: true
