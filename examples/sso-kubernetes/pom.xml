@@ -31,38 +31,44 @@
 			<version>${version.camundaSpringBoot}</version>
 		</dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		 
+
 		<dependency>
 			<groupId>org.springframework.security.oauth.boot</groupId>
 			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
 			<version>${version.springSecurityOauth2}</version>
 		</dependency>
- 
+
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-oauth2-client</artifactId>
 		    <version>5.1.6.RELEASE</version>
 		</dependency>
- 
+
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-oauth2-resource-server</artifactId>
-		    
+
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-oauth2-jose</artifactId>
 		    <version>5.1.6.RELEASE</version>
 		</dependency>
-		
-		
 
-		<!-- Redis Session Cache 
+
+
+		<!-- Redis Session Cache
 		<dependency>
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-data-redis</artifactId>
@@ -72,7 +78,7 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 		-->
-		
+
 		<!-- Keycloak Identity Prover Plugin  -->
 		<dependency>
 	        <groupId>org.camunda.bpm.extension</groupId>
@@ -139,7 +145,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Add your own dependencies here, if in compile scope, they are added 
+		<!-- Add your own dependencies here, if in compile scope, they are added
 			to the jar -->
 
 	</dependencies>
@@ -150,7 +156,7 @@
 			<name>Camunda Maven Repository</name>
 			<url>https://app.camunda.com/nexus/content/groups/public</url>
 		</repository>
-		<!-- 
+		<!--
 		<repository>
 			<id>camunda-bpm-ee</id>
 			<name>Camunda Enterprise Maven Repository</name>

@@ -36,16 +36,17 @@ public class StatelessUserAuthenticationFilter implements Filter {
 
         String username = null;
 
-        
+        //log.info(SecurityContextHolder.getContext().getAuthentication().getClaims().toString());
 
         if (principal instanceof UserDetails) {
             username = ((UserDetails) principal).getUsername();
         } else if (principal instanceof Jwt){
+
         	Jwt token = (Jwt) principal;
-        	
-        	log.info("token {}",token.toString());
-        	
-        } 
+
+        	log.info("token {}",token.getClaims().toString());
+
+        }
         else {
             username = principal.toString();
         }
@@ -54,8 +55,8 @@ public class StatelessUserAuthenticationFilter implements Filter {
         log.info("filter for user {}",username);
         try {
             engine.getIdentityService().setAuthentication(username, getUserGroups(username));
-            
-            
+
+
             chain.doFilter(request, response);
         } finally {
             clearAuthentication(engine);

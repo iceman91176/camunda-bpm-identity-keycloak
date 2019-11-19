@@ -8,3 +8,6 @@
 *.iws
 *.iml
 *.ipr
+examples/sso-kubernetes/camunda-db.mv.db
+/.theia
+
