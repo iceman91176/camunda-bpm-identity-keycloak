@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Attention: to properly separate dependencies of extension and examples, do not define any dependencies/management here! -->
-  
+
   <parent>
     <groupId>org.camunda</groupId>
     <artifactId>camunda-release-parent</artifactId>
@@ -17,18 +17,18 @@
   <packaging>pom</packaging>
   <name>camunda BPM - engine plugins - identity - keycloak - root</name>
   <description>A Camunda Identity Provider Plugin for Keycloak</description>
-  
+
   <properties>
     <version.java>1.8</version.java>
     <encoding>UTF-8</encoding>
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
     <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
-    
+
     <!-- versions -->
 	<version.camunda>7.11.0</version.camunda>
 	<version.camundaSpringBoot>3.3.5</version.camundaSpringBoot>
 	<version.springBoot>2.1.9.RELEASE</version.springBoot>
-	<version.springSecurityOauth2>2.1.9.RELEASE</version.springSecurityOauth2>
+	<version.springSecurityOauth2>2.2.1.RELEASE</version.springSecurityOauth2>
 
     <!-- disable javadoc linter for JDK8 to not fail on incomplete javadoc -->
     <additionalparam>-Xdoclint:none</additionalparam>
@@ -68,7 +68,7 @@
     <module>extension</module>
     <module>examples</module>
   </modules>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>

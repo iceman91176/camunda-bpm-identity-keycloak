@@ -11,3 +11,4 @@
 examples/sso-kubernetes/camunda-db.mv.db
 /.theia
 
+examples/sso-kubernetes/camunda-db.*

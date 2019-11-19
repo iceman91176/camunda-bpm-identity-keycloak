@@ -11,7 +11,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${keycloak.url.client}/auth/realms/${KEYCLOAK_REALM} 
+          issuer-uri: ${keycloak.url.client}/auth/realms/${KEYCLOAK_REALM}
 
 
 
@@ -24,7 +24,7 @@ spring:
 #    port: ${REDIS_PORT:6379}
 
 camunda.bpm:
-  history-level: audit
+  history-level: full
   authorization:
     enabled: true
   filter:
@@ -51,6 +51,9 @@ security:
 
 
 logging.level.org.springframework.security: DEBUG
+
+plugin.identity.keycloak.rest:
+  userNameClaim: preferred_username
 
 plugin.identity.keycloak:
   keycloakIssuerUrl: ${keycloak.url.plugin}/auth/realms/${KEYCLOAK_REALM}

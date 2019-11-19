@@ -2,27 +2,35 @@ package org.camunda.bpm.extension.keycloak.showcase.filter;
 
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.rest.util.EngineUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Component
 public class StatelessUserAuthenticationFilter implements Filter {
+
+
+    @Value("${plugin.identity.keycloak.rest.userNameClaim}")
+    String userNameClaim;
 
     static Logger log = LoggerFactory.getLogger(StatelessUserAuthenticationFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) {
 
-        log.info("Init StatelessUserAuthenticationFilter");
+        log.info("Init StatelessUserAuthenticationFilter - usernameclaim {}",this.userNameClaim);
 
     }
 
@@ -35,6 +43,7 @@ public class StatelessUserAuthenticationFilter implements Filter {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String username = null;
+        boolean apiClient=false;
 
         //log.info(SecurityContextHolder.getContext().getAuthentication().getClaims().toString());
 
@@ -42,21 +51,40 @@ public class StatelessUserAuthenticationFilter implements Filter {
             username = ((UserDetails) principal).getUsername();
         } else if (principal instanceof Jwt){
 
-        	Jwt token = (Jwt) principal;
+            Jwt token = (Jwt) principal;
+            if(token.getClaims().containsKey(this.userNameClaim))
+            {
+                log.debug("Get username from JWT-Token by claim {}",this.userNameClaim);
+                username=token.getClaims().get(this.userNameClaim).toString();
+            }
+            //get scopes
+            if(token.getClaims().containsKey("scope"))
+            {
+                List<String> scopes = Arrays.asList(((String) token.getClaims().get("scope")).split(" "));
+                if (scopes.contains("camunda-rest-client")){
+                    apiClient=true;
+                    //Get groups from JWT
 
-        	log.info("token {}",token.getClaims().toString());
+                }
+            }
+
+        	//log.info("token {}",token.getClaims().toString());
 
         }
         else {
             username = principal.toString();
         }
 
-        username = "bla";
+        if ((username==null)&&(!apiClient)){
+            log.warn("No username found and client is not an API-Only-Client");
+            clearAuthentication(engine);
+            return;
+        }
+
+
         log.info("filter for user {}",username);
         try {
-            engine.getIdentityService().setAuthentication(username, getUserGroups(username));
-
-
+            engine.getIdentityService().setAuthentication(username, getUserGroups());
             chain.doFilter(request, response);
         } finally {
             clearAuthentication(engine);
@@ -73,7 +101,7 @@ public class StatelessUserAuthenticationFilter implements Filter {
         engine.getIdentityService().clearAuthentication();
     }
 
-    private List<String> getUserGroups(String userId){
+    private List<String> getUserGroups(){
 
         List<String> groupIds = new ArrayList<String>();
 
@@ -81,10 +109,9 @@ public class StatelessUserAuthenticationFilter implements Filter {
 
         groupIds = authentication.getAuthorities().stream()
                 .map(res -> res.getAuthority())
-                .map(res -> res.substring(5)) // Strip "ROLE_"
+                //.map(res -> res.substring(5)) // Strip "ROLE_"
                 .collect(Collectors.toList());
 
-        groupIds.add("task-reader");
         log.info("groups{}",groupIds.toString());
         return groupIds;
 

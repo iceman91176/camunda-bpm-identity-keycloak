@@ -41,29 +41,30 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+            <version>2.1.9.RELEASE</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.security.oauth.boot</groupId>
 			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
-			<version>${version.springSecurityOauth2}</version>
+			<version>2.1.9.RELEASE</version>
 		</dependency>
 
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-oauth2-client</artifactId>
-		    <version>5.1.6.RELEASE</version>
+		    <version>5.1.7.RELEASE</version>
 		</dependency>
 
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-oauth2-resource-server</artifactId>
-
+            <version>5.1.7.RELEASE</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-oauth2-jose</artifactId>
-		    <version>5.1.6.RELEASE</version>
+		    <version>5.1.7.RELEASE</version>
 		</dependency>
 
 
