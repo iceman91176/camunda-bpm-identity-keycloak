@@ -34,9 +34,9 @@ server:
   port: 8080
   servlet.context-path: /camunda
 
-keycloak.url.client: ${KEYCLOAK_BASE_URL:https://auth.dev.witcom.services}
-keycloak.url.token: ${KEYCLOAK_BASE_URL:https://auth.dev.witcom.services}
-keycloak.url.plugin: ${KEYCLOAK_BASE_URL:https://auth.dev.witcom.services}
+keycloak.url.client: ${KEYCLOAK_BASE_URL:https://auth.xxx.services}
+keycloak.url.token: ${KEYCLOAK_BASE_URL:https://auth.xxx.services}
+keycloak.url.plugin: ${KEYCLOAK_BASE_URL:https://auth.xxx.services}
 
 security:
   oauth2:
@@ -50,10 +50,12 @@ security:
       userInfoUri: ${keycloak.url.client}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/userinfo
 
 
-logging.level.org.springframework.security: DEBUG
+#logging.level.org.springframework.security: DEBUG
 
 plugin.identity.keycloak.rest:
   userNameClaim: preferred_username
+  authorityPrefix: "ROLE_"
+  authorityAttributeName: groupIds
 
 plugin.identity.keycloak:
   keycloakIssuerUrl: ${keycloak.url.plugin}/auth/realms/${KEYCLOAK_REALM}

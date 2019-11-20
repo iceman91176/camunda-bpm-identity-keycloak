@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 @Component
 public class StatelessUserAuthenticationFilter implements Filter {
 
+    @Value("${plugin.identity.keycloak.rest.authorityPrefix:ROLE_}")
+    private String authorityPrefix;
 
     @Value("${plugin.identity.keycloak.rest.userNameClaim}")
     String userNameClaim;
@@ -67,22 +69,11 @@ public class StatelessUserAuthenticationFilter implements Filter {
 
                 }
             }
-
-        	//log.info("token {}",token.getClaims().toString());
-
         }
         else {
             username = principal.toString();
         }
 
-        if ((username==null)&&(!apiClient)){
-            log.warn("No username found and client is not an API-Only-Client");
-            clearAuthentication(engine);
-            return;
-        }
-
-
-        log.info("filter for user {}",username);
         try {
             engine.getIdentityService().setAuthentication(username, getUserGroups());
             chain.doFilter(request, response);
@@ -109,10 +100,10 @@ public class StatelessUserAuthenticationFilter implements Filter {
 
         groupIds = authentication.getAuthorities().stream()
                 .map(res -> res.getAuthority())
-                //.map(res -> res.substring(5)) // Strip "ROLE_"
+                .map(res -> res.substring(this.authorityPrefix.length())) // Strip Prefix
                 .collect(Collectors.toList());
 
-        log.info("groups{}",groupIds.toString());
+        log.info(groupIds.toString());
         return groupIds;
 
     }

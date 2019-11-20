@@ -5,25 +5,27 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * @author Rob Winch
- * @author Josh Cummings
- * @since 5.1
+ * @author Carsten Buchberger
  */
+@Component
 public class KeycloakAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
-	private String authorityPrefix = "SCOPE_";
 
-	private Collection<String> attributeNames =
-			Arrays.asList("scope", "scp");
+    @Value("${plugin.identity.keycloak.rest.authorityPrefix:}")
+    private String authorityPrefix;
 
+    @Value("${plugin.identity.keycloak.rest.authorityAttributeName:roles}")
+    private String authorityAttributeName;
 
 	public final AbstractAuthenticationToken convert(Jwt jwt) {
 		Collection<GrantedAuthority> authorities = extractAuthorities(jwt);
@@ -34,8 +36,8 @@ public class KeycloakAuthenticationConverter implements Converter<Jwt, AbstractA
         this.authorityPrefix = authorityPrefix;
     }
 
-    public void setAuthorityAttributeNames(Collection<String> attributeNames){
-        this.attributeNames = attributeNames;
+    public void setAuthorityAttributeName(String authorityAttributeName){
+        this.authorityAttributeName = authorityAttributeName;
     }
 
 	protected Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
@@ -47,18 +49,18 @@ public class KeycloakAuthenticationConverter implements Converter<Jwt, AbstractA
 	}
 
 	private Collection<String> getScopes(Jwt jwt) {
-		for ( String attributeName : this.attributeNames ) {
-			Object scopes = jwt.getClaims().get(attributeName);
-			if (scopes instanceof String) {
-				if (StringUtils.hasText((String) scopes)) {
-					return Arrays.asList(((String) scopes).split(" "));
-				} else {
-					return Collections.emptyList();
-				}
-			} else if (scopes instanceof Collection) {
-				return (Collection<String>) scopes;
-			}
-		}
+
+        Object scopes = jwt.getClaims().get(this.authorityAttributeName);
+        if (scopes instanceof String) {
+            if (StringUtils.hasText((String) scopes)) {
+                return Arrays.asList(((String) scopes).split(" "));
+            } else {
+                return Collections.emptyList();
+            }
+        } else if (scopes instanceof Collection) {
+            return (Collection<String>) scopes;
+        }
+
 
 		return Collections.emptyList();
 	}
